@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sıla Deniz KABAY 💫 | Sana Özel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* GENEL AYARLAR */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --sila-renk-1: #ff6b9d;
+            --sila-renk-2: #c44569;
+            --altun: #f1c40f;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #fdf2f5;
+            color: #333;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* GİRİŞ EKRANI VE RESPONSIVE SLIDESHOW */
+        #giris-ekrani {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 10000; transition: 0.8s;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+
+        .slideshow-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background-color: #000;
+        }
+
+        .slide {
+            position: absolute; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%;
+            background-size: cover; 
+            background-position: center center; 
+            background-repeat: no-repeat;
+            opacity: 0; 
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .slide.active { opacity: 1; }
+
+        .overlay-giris {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.45); z-index: 0;
+        }
+
+        .sifre-kutusu {
+            background: rgba(255,255,255,0.12); 
+            padding: 40px 20px; 
+            border-radius: 25px;
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            text-align: center; 
+            width: 90%; 
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.3); 
+            color: white;
+            z-index: 1; 
+            position: relative;
+        }
+
+        #sila-sifre {
+            padding: 15px; border-radius: 30px; border: none; width: 100%;
+            margin: 20px 0; text-align: center; font-size: 1.1em; outline: none;
+            background: rgba(255, 255, 255, 0.95); color: #333;
+        }
+
+        .giris-btn {
+            padding: 15px 40px; background: white; color: var(--sila-renk-2);
+            border: none; border-radius: 30px; cursor: pointer; font-weight: 600; 
+            transition: 0.3s; width: 80%;
+        }
+
+        /* ANA İÇERİK */
+        #ana-icerik { display: none; opacity: 0; transition: 1s; }
+        section { padding: 60px 20px; text-align: center; }
+        h2 { font-family: 'Dancing Script', cursive; font-size: 3em; color: var(--sila-renk-2); margin-bottom: 30px; }
+
+        /* HERO & SAYAÇ */
+        .hero { 
+            height: 100vh; 
+            background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('resim3.jpg') center/cover no-repeat; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
+            padding: 0 20px;
+        }
+        .hero h1 { font-family: 'Dancing Script'; font-size: clamp(2.5em, 8vw, 5em); text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .sila-sayac { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; width: 100%; max-width: 800px;}
+        
+        /* Sayaç kartları tam metinler için biraz daha genişletildi */
+        .sayac-kart { 
+            background: rgba(255,255,255,0.95); 
+            color: var(--sila-renk-2); 
+            padding: 15px 5px; 
+            border-radius: 15px; 
+            min-width: 100px; 
+            flex: 1; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+            font-size: 0.85em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .sayac-kart span { display: block; font-size: 2em; font-weight: bold; margin-bottom: 2px; }
+
+        /* ANILAR KISMI */
+        .ani-galeri { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .ani-kart { background: white; padding: 10px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .ani-kart img, .ani-kart video { width: 100%; height: 300px; object-fit: cover; border-radius: 10px; transition: 0.3s; display: block; }
+        .ani-kart p { padding: 15px; font-style: italic; color: #666; font-size: 0.95em; }
+
+        /* QUIZ */
+        .quiz-kart { background: white; max-width: 650px; margin: 0 auto; padding: 30px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .cevaplar { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .cevap-btn { padding: 15px; border: 2px solid #eee; border-radius: 15px; background: white; cursor: pointer; transition: 0.3s; font-family: inherit; font-size: 1em; }
+        .dogru { background: #4caf50 !important; color: white !important; border-color: #4caf50 !important; }
+        .yanlis { background: #f44336 !important; color: white !important; border-color: #f44336 !important; }
+        
+        /* MÜZİK ÇALAR VE MODAL */
+        .muzik-kutusu { position: fixed; bottom: 20px; left: 20px; background: white; padding: 10px 20px; border-radius: 50px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 999; }
+        .muzik-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--sila-renk-1); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .modal { display: none; position: fixed; z-index: 20000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); }
+        .modal-icerik { background: white; margin: 15% auto; padding: 40px; border-radius: 30px; width: 85%; max-width: 450px; text-align: center; }
+        .ara-btn { display: inline-block; margin-top: 25px; padding: 18px 50px; background: #2ecc71; color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.3em; }
+
+        #odul-butonu { display: none; margin: 25px auto; padding: 15px 35px; background: var(--altun); color: #333; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; animation: nabiz 2s infinite; font-size: 1.1em; }
+        @keyframes nabiz { 0% { transform: scale(1); } 70% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .kalp { position: fixed; color: var(--sila-renk-1); pointer-events: none; z-index: 9999; animation: ucma 4s linear forwards; }
+        @keyframes ucma { 0% { transform: translateY(100vh) scale(0); opacity: 1; } 100% { transform: translateY(-10vh) scale(1.5); opacity: 0; } }
+
+        /* MOBİL ÖZEL AYARLAR */
+        @media (max-width: 480px) {
+            h2 { font-size: 2.2em; }
+            .hero h1 { font-size: 2.6em; }
+            .ani-kart img, .ani-kart video { height: 250px; }
+            .sayac-kart { min-width: 80px; padding: 10px 2px; font-size: 0.7em; }
+            .sayac-kart span { font-size: 1.4em; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="giris-ekrani">
+        <div class="slideshow-container">
+            <div class="slide active" style="background-image: url('g1.jpg');"></div>
+            <div class="slide" style="background-image: url('g2.jpg');"></div>
+            <div class="slide" style="background-image: url('g3.jpg');"></div>
+            <div class="slide" style="background-image: url('g4.jpg');"></div>
+            <div class="slide" style="background-image: url('g5.jpg');"></div>
+            <div class="slide" style="background-image: url('g6.jpg');"></div>
+            <div class="slide" style="background-image: url('g7.jpg');"></div>
+        </div>
+        <div class="overlay-giris"></div>
+
+        <div class="sifre-kutusu">
+            <h1 style="font-family: 'Dancing Script'; font-size: 3em; margin-bottom: 5px;">Sıla Deniz</h1>
+            <p style="font-size: 0.9em; opacity: 0.9;">Seni gördüğüm ilk an... <br>İlk buluşma yerimiz neresiydi?</p>
+            <input type="text" id="sila-sifre" placeholder="Cevabı yaz aşkım...">
+            <button class="giris-btn" onclick="silaGiris()">Giriş Yap ❤️</button>
+            <p id="hata" style="display:none; color:#ffeb3b; margin-top:15px; font-weight: bold; font-size: 0.85em;">Yanlış cevap sevgilim! 🥺</p>
+        </div>
+    </div>
+
+    <div class="muzik-kutusu">
+        <button class="muzik-btn" onclick="muzikKontrol()" id="m-btn">▶️</button>
+        <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 0.8em; font-weight: 600;">Yavuz Çetin</span>
+            <span style="font-size: 0.7em; color: #888;">Sadece Senin Olmak</span>
+        </div>
+        <audio id="arka-plan-muzik" loop>
+            <source src="sarkiniz.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <div id="odulModal" class="modal">
+        <div class="modal-icerik">
+            <h2 style="font-family: 'Dancing Script'; font-size: 2em; margin-bottom: 20px;">Tebrikler Sevgilim! ✨</h2>
+            <p>Beni ne kadar iyi tanıdığını ispatladın. Ödülün için beni aramaya ne dersin?</p>
+            <a href="tel:+905438776621" class="ara-btn">📞 Beni Ara</a>
+            <p style="margin-top:20px; font-size: 0.8em; color: #bbb; cursor:pointer;" onclick="modalKapat()">Kapat</p>
+        </div>
+    </div>
+
+    <div id="ana-icerik">
+        <section class="hero">
+            <h1>İyi ki Varsın Sıla...</h1>
+            <div class="sila-sayac" id="sayac"></div>
+        </section>
+
+        <section style="background: white;">
+            <h2>En Güzel Anılarımız 📸</h2>
+            <div class="ani-galeri">
+                <div class="ani-kart">
+                    <img src="resim1.jpg" alt="Anı 1" onerror="this.src='https://via.placeholder.com/400x300?text=Resim+1'">
+                    <p>"Dünyanın en güzel bakışı..."</p>
+                </div>
+                <div class="ani-kart">
+                    <video id="ani-video" loop muted playsinline autoplay>
+                        <source src="video1.mp4" type="video/mp4">
+                    </video>
+                    <p>"Birlikteyken zaman duruyor."</p>
+                </div>
+                <div class="ani-kart">
+                    <img src="resim2.jpg" alt="Anı 2" onerror="this.src='https://via.placeholder.com/400x300?text=Resim+2'">
+                    <p>"Seninle her an bir hediye."</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Beni Ne Kadar Tanıyorsun? 🧩</h2>
+            <div class="quiz-kart">
+                <div class="ilerleme-cubugu"><div class="ilerleme-doluluk" id="bar"></div></div>
+                <div id="quiz-govde"></div>
+                <div id="quiz-sonuc" style="display:none;">
+                    <h3 id="s-baslik"></h3>
+                    <p id="s-puan" style="font-size: 2.5em; margin: 20px 0; color: var(--sila-renk-2); font-weight: bold;"></p>
+                    <p id="s-not"></p>
+                    <button id="odul-butonu" onclick="modalAc()">🎁 ÖDÜLÜNÜ AL!</button>
+                    <button class="giris-btn" onclick="location.reload()" style="margin-top:20px; background: #eee; color:#333; font-size: 0.8em; width: auto;">Tekrarla 🔄</button>
+                </div>
+            </div>
+        </section>
+
+        <footer style="padding: 40px; color: #bbb;">
+            <p style="font-family: 'Dancing Script'; font-size: 1.5em; color: var(--sila-renk-1);">Sıla Deniz KABAY ♾️</p>
+        </footer>
+    </div>
+
+    <script>
+        // SLIDESHOW MANTIĞI
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showNextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        setInterval(showNextSlide, 4000); 
+
+        const muzik = document.getElementById('arka-plan-muzik');
+        let muzikBasladi = false;
+
+        function silaGiris() {
+            const cevap = document.getElementById('sila-sifre').value.toLowerCase().trim();
+            if(cevap.includes("mackbear")) {
+                document.getElementById('giris-ekrani').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('giris-ekrani').style.display = 'none';
+                    document.getElementById('ana-icerik').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('ana-icerik').style.opacity = '1';
+                        const v = document.getElementById('ani-video');
+                        if(v) v.play();
+                    }, 50);
+                    sayacBaslat();
+                    soruGoster();
+                    kalpYagmuru();
+                }, 800);
+            } else { document.getElementById('hata').style.display = 'block'; }
+        }
+
+        function muzikKontrol() {
+            const btn = document.getElementById('m-btn');
+            if (muzik.paused) { muzik.play(); btn.innerText = "⏸️"; } 
+            else { muzik.pause(); btn.innerText = "▶️"; }
+        }
+
+        function sayacBaslat() {
+            const baslangic = new Date('2024-08-12T22:00:00');
+            setInterval(() => {
+                const fark = new Date() - baslangic;
+                const d = Math.floor(fark / 86400000);
+                const h = Math.floor((fark / 3600000) % 24);
+                const m = Math.floor((fark / 60000) % 60);
+                const s = Math.floor((fark / 1000) % 60);
+                // SAYAÇ METİNLERİ GÜNCELLENDİ (GÜN, SAAT, DAKİKA, SANİYE)
+                document.getElementById('sayac').innerHTML = `
+                    <div class="sayac-kart"><span>${d}</span>Gün</div>
+                    <div class="sayac-kart"><span>${h}</span>Saat</div>
+                    <div class="sayac-kart"><span>${m}</span>Dakika</div>
+                    <div class="sayac-kart"><span>${s}</span>Saniye</div>
+                `;
+            }, 1000);
+        }
+
+        const sorular = [
+            { q: "İlk tatilimizi unutulmaz kılan an?", a: ["Tekne turu", "Duman konseri", "Akşam yemeği", "Yolculuk"], d: 1, m: "Duman konserini asla unutamam! 🎸" },
+            { q: "İlk 'Seni Seviyorum' tarihimiz?", a: ["15 Ağustos", "22 Ağustos", "1 Eylül", "10 Ağustos"], d: 1, m: "22 Ağustos... Kalbimin tek sahibi. ❤️" },
+            { q: "İlk magnetimiz nerenin?", a: ["İzmir", "Muğla", "Bodrum", "Ankara"], d: 1, m: "Muğla magneti her zaman buzdolabımızda! 🏠" },
+            { q: "Sence en büyük süper gücün?", a: ["Zekan", "Sabrın", "Gülüşün", "Yardımseverliğin"], d: 2, m: "O gülüş her şeyi iyileştiriyor. 😊" },
+            { q: "Seni ilk gördüğüm yer?", a: ["Park", "Okul", "Mackbear", "Kafe"], d: 2, m: "Mackbear'daki o ilk bakış... ☕" },
+            { q: "Hikayemizin başlangıç tarihi?", a: ["10 Ağustos", "12/13 Ağustos", "15 Ağustos", "1 Eylül"], d: 1, m: "Mucizevi bir başlangıçtı. ✨" },
+            { q: "İlk hediyem neydi?", a: ["Kitap", "Çiçek", "Takı", "Çikolata"], d: 1, m: "Çiçekler kadar güzeldin o gün. 💐" },
+            { q: "Hayalimizdeki şehir?", a: ["Roma", "Londra", "Paris", "Berlin"], d: 2, m: "Paris sokaklarında el ele... ✈️" },
+            { q: "En sevdiğim yemek?", a: ["Mantı", "Seni yemek", "Pizza", "Hamburger"], d: 1, m: "Sensiz hiçbir şeyin tadı yok! 😋" },
+            { q: "Seni ne kadar seviyorum?", a: ["Biraz", "Dünyalar kadar", "Çooooookkk", "Çok"], d: 2, m: "Sonsuza dek! ♾️" }
+        ];
+
+        let index = 0, puan = 0;
+
+        function soruGoster() {
+            if(index >= sorular.length) return quizBitir();
+            const s = sorular[index];
+            const b = document.getElementById('bar');
+            if(b) b.style.width = (index / sorular.length * 100) + "%";
+            document.getElementById('quiz-govde').innerHTML = `
+                <p style="font-weight:600; font-size:1.1em; margin-bottom:20px;">${index + 1}. ${s.q}</p>
+                <div class="cevaplar">
+                    ${s.a.map((secenek, i) => `<button class="cevap-btn" onclick="kontrol(${i})">${secenek}</button>`).join('')}
+                </div>
+                <div id="feedback" class="soru-aciklama"></div>
+            `;
+        }
+
+        function kontrol(i) {
+            if(!muzikBasladi) {
+                muzik.play();
+                document.getElementById('m-btn').innerText = "⏸️";
+                muzikBasladi = true;
+            }
+
+            const s = sorular[index];
+            const butonlar = document.querySelectorAll('.cevap-btn');
+            const f = document.getElementById('feedback');
+            butonlar.forEach(b => b.disabled = true);
+            
+            if(i === s.d) {
+                butonlar[i].classList.add('dogru'); puan++;
+                if(f) { f.style.background = "#d4edda"; f.innerHTML = "✅ " + s.m; f.style.display = "block"; }
+            } else {
+                butonlar[i].classList.add('yanlis'); butonlar[s.d].classList.add('dogru');
+                if(f) { f.style.background = "#f8d7da"; f.innerHTML = "❌ Üzülme aşkım! " + s.m; f.style.display = "block"; }
+            }
+            setTimeout(() => { index++; soruGoster(); }, 2000);
+        }
+
+        function quizBitir() {
+            document.getElementById('quiz-govde').style.display = "none";
+            const sonucDiv = document.getElementById('quiz-sonuc');
+            sonucDiv.style.display = "block";
+            const b = document.getElementById('bar');
+            if(b) b.style.width = "100%";
+            document.getElementById('s-puan').innerText = puan + " / 10";
+            if(puan >= 8) {
+                document.getElementById('s-baslik').innerText = "Mükemmelsin! 🏆";
+                document.getElementById('odul-butonu').style.display = "block";
+            } else {
+                document.getElementById('s-baslik').innerText = "Canın Sağolsun Sevgilim ❤️";
+            }
+        }
+
+        function modalAc() { document.getElementById('odulModal').style.display = "block"; }
+        function modalKapat() { document.getElementById('odulModal').style.display = "none"; }
+        
+        function kalpYagmuru() {
+            setInterval(() => {
+                const k = document.createElement('div');
+                k.className = 'kalp'; k.innerHTML = '❤️';
+                k.style.left = Math.random() * 100 + "vw";
+                document.body.appendChild(k);
+                setTimeout(() => k.remove(), 4000);
+            }, 600);
+        }
+    </script>
+</body>
+</html>
